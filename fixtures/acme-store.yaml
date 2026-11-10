@@ -1,0 +1,138 @@
+openapi: 3.0.3
+info:
+  title: Acme Store API
+  version: "2.1"
+  description: Sample commerce API used to test connector-forge.
+servers:
+  - url: https://api.acme-store.example/v2
+security:
+  - bearerAuth: []
+tags:
+  - name: Products
+  - name: Orders
+paths:
+  /products:
+    get:
+      tags: [Products]
+      operationId: listProducts
+      summary: List products
+      description: Returns a page of products, newest first.
+      parameters:
+        - name: limit
+          in: query
+          description: Maximum number of products to return
+          schema: { type: integer, minimum: 1, maximum: 100, default: 20 }
+        - name: page[cursor]
+          in: query
+          description: Cursor from the previous page's next_cursor
+          schema: { type: string }
+        - name: status
+          in: query
+          description: Filter by status
+          schema: { type: string, enum: [active, archived] }
+      responses:
+        "200": { description: OK }
+    post:
+      tags: [Products]
+      operationId: createProduct
+      summary: Create a product
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ProductInput" }
+      responses:
+        "201": { description: Created }
+  /products/{productId}:
+    parameters:
+      - name: productId
+        in: path
+        required: true
+        description: Product ID, e.g. prod_123
+        schema: { type: string }
+    get:
+      tags: [Products]
+      operationId: getProduct
+      summary: Get a product
+      responses:
+        "200": { description: OK }
+    patch:
+      tags: [Products]
+      summary: Update a product
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ProductInput" }
+      responses:
+        "200": { description: OK }
+    delete:
+      tags: [Products]
+      operationId: deleteProduct
+      summary: Delete a product
+      responses:
+        "204": { description: Deleted }
+  /orders:
+    get:
+      tags: [Orders]
+      operationId: Orders_Query
+      summary: List orders
+      parameters:
+        - name: customerEmail
+          in: query
+          description: Only orders placed by this customer email
+          schema: { type: string, format: email }
+        - name: X-Region
+          in: header
+          description: Data region to query
+          schema: { type: string, enum: [us, eu] }
+      responses:
+        "200": { description: OK }
+  /orders/{orderId}/refunds:
+    post:
+      tags: [Orders]
+      summary: Refund an order
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [amount]
+              properties:
+                amount: { type: number, minimum: 0.01, description: Amount to refund in the order currency }
+                reason: { type: string, nullable: true }
+      responses:
+        "201": { description: Created }
+  /legacy/export:
+    get:
+      deprecated: true
+      summary: Old export endpoint
+      responses:
+        "200": { description: OK }
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+  schemas:
+    ProductInput:
+      type: object
+      required: [name, price]
+      properties:
+        id: { type: string, readOnly: true }
+        name: { type: string, maxLength: 120, description: Display name }
+        price: { type: number, minimum: 0, description: Unit price }
+        tags:
+          type: array
+          items: { type: string }
+        category: { $ref: "#/components/schemas/Category" }
+    Category:
+      type: object
+      properties:
+        name: { type: string }
+        parent: { $ref: "#/components/schemas/Category" }

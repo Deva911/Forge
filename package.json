@@ -1,0 +1,38 @@
+{
+  "name": "connector-forge-mcp-server",
+  "version": "1.0.0",
+  "description": "MCP server that helps any platform build an MCP connector for its own product: analyze an OpenAPI spec, plan tools, generate a runnable connector, and lint tool designs.",
+  "type": "module",
+  "bin": {
+    "connector-forge-mcp-server": "dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx watch src/index.ts",
+    "smoke": "tsx scripts/smoke.ts"
+  },
+  "engines": {
+    "node": ">=20.3"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/express": "^2.0.2",
+    "@modelcontextprotocol/node": "^2.1.1",
+    "@modelcontextprotocol/server": "^2.3.1",
+    "express": "^5.1.0",
+    "graphql": "^16.15.0",
+    "yaml": "^2.8.0",
+    "zod": "^4.2.0"
+  },
+  "devDependencies": {
+    "@modelcontextprotocol/client": "^2.3.1",
+    "@types/express": "^5.0.0",
+    "@types/node": "^24.0.0",
+    "jose": "^6.2.17",
+    "tsx": "^4.19.2",
+    "typescript": "^5.9.3"
+  }
+}

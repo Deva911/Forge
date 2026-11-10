@@ -1,0 +1,21 @@
+"""Sample store schema used to test GraphQL support."""
+type Query {
+  "Look up one product by ID"
+  product(id: ID!): Product
+  "List products, newest first"
+  products(first: Int = 20, after: String, query: String): ProductConnection!
+  shop: Shop!
+}
+type Mutation {
+  "Create a product"
+  productCreate(input: ProductInput!): Product
+  "Delete a product permanently"
+  productDelete(id: ID!): Boolean!
+}
+type Shop { name: String! currency: String! }
+type Product { id: ID! title: String! price: Float status: ProductStatus! variants: [Variant!]! }
+type Variant { id: ID! sku: String }
+type ProductConnection { nodes: [Product!]! pageInfo: PageInfo! }
+type PageInfo { hasNextPage: Boolean! endCursor: String }
+enum ProductStatus { ACTIVE ARCHIVED }
+input ProductInput { title: String! price: Float status: ProductStatus }

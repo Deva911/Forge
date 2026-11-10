@@ -1,0 +1,14 @@
+name: ci
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --no-fund
+      - run: npm run build
+      # Fails the build when a dependency has a known high-severity vulnerability
+      - run: npm audit --omit=dev --audit-level=high
