@@ -83,3 +83,7 @@ The `--e2e` run generates a connector from `fixtures/acme-store.yaml`, compiles 
 - Request bodies: JSON and form-encoded. File uploads and other body types are skipped with a warning.
 - Generated tools return the API's JSON. Tool descriptions come from the spec's summaries; rewriting them for the model is the highest-value manual step.
 - The spec cache behind `spec_id` is in memory (last 20 specs), per server instance.
+
+## Demo deck
+
+`docs/demo-deck.html` is the 10-slide demo presentation with speaker notes; open it in a browser. It predates GraphQL support and per-user API access, so it does not mention them.
